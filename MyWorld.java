@@ -16,9 +16,6 @@ public class MyWorld extends World
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(600, 400, 1); 
-        GreenfootImage background = new GreenfootImage(500, 300);
-        background.setColor(Color.BLACK);
-        setBackground(background);
         prepare();
 
     }
@@ -29,6 +26,8 @@ public class MyWorld extends World
      */
     private void prepare()
     {
-        
+        GreenfootImage background = new GreenfootImage(600, 400);
+        background.setColor(Color.BLACK);
+        setBackground(background);
     }
 }
