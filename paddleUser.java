@@ -17,5 +17,11 @@ public class paddleUser extends Actor
         paddleUser actor = new paddleUser();
         GreenfootImage userPaddleImage = getImage();
         userPaddleImage.scale(20,100);
+         if (Greenfoot.isKeyDown("down")) {
+              setLocation(getX(), getY() + 10);
+            }
+         if (Greenfoot.isKeyDown("up")) {
+              setLocation(getX(), getY() -10);
+            }
     }
 }
