@@ -14,15 +14,6 @@ public class BotMovement extends Actor
      */
     public void act()
     {
-        while(Ball.getx()>0||Ball.getx()<900){
-            if (Ball.getx()>450){
-                if (Ball.gety()>BotPaddle.gety()){
-                    BotY++;
-                }
-                if (Ball.gety()<BotPaddle.gety()){
-                    BotY--;
-                }
-            }
-        }
+        // Need to work
     }
 }
