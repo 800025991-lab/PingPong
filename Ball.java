@@ -18,5 +18,11 @@ public class Ball extends Actor
          GreenfootImage ballImage = getImage();
          ballImage.scale(100,100);
     }
+    public static int getx(){
+        return getX();
+    }
+    public static int gety(){
+        return getY();
+    }
 
 }
