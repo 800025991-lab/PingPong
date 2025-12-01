@@ -17,5 +17,19 @@ public class paddleBot extends Actor
         paddleBot actor = new paddleBot();
         GreenfootImage botPaddleImage = getImage();
         botPaddleImage.scale(20,100);
+        
+        
+        Ball Ball=(Ball) getWorld().getObjects(Ball.class).get(0);
+        int ballY=Ball.getY();
+        
+        if(ballY>getY())
+        {
+            setLocation(getX(),getY()+10);
+        }
+        
+        if(ballY<getY())
+        {
+            setLocation(getX(),getY()-10);
+        }
     }
 }
