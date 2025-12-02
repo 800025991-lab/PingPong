@@ -77,7 +77,12 @@ public class MyWorld extends World
         }
         
         // Check if the ball goes off the side walls
-        if (gameBall.getX() + 28 > 900 || gameBall.getX() - 28 < 0) { // Check both boundaries
+        if (gameBall.getX() + 28 > 900) {
+            (Scoreboard.botScore)++;
+            isRunning = false;
+        }
+        if (gameBall.getX() - 28 < 0) { // Check both boundaries
+            (Scoreboard.playerScore)++;
             isRunning = false; // Game over
         }
     
