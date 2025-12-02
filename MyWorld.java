@@ -12,6 +12,7 @@ public class MyWorld extends World
      * Constructor for objects of class MyWorld.
      * 
      */
+    public boolean isRunning = false;
     public MyWorld()
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
@@ -30,6 +31,7 @@ public class MyWorld extends World
         
         paddleUser uPad = new paddleUser(); addObject(uPad, 70, 290); 
         paddleBot bPad = new paddleBot(); addObject(bPad, 810, 290);
+        ballMovement(bPad, uPad, gameBall, isRunning);
     }
     
     /**
@@ -41,23 +43,39 @@ public class MyWorld extends World
         GreenfootImage background = getBackground();
         background.setColor(Color.BLACK);
         background.fill();
+        started();
     }
     
-    private void ballMovement(Actor paddleUser, Actor paddleBall, boolean gameRunning) {
+    private void ballMovement(Actor paddleBot, Actor paddleUser, Actor paddleBall, boolean gameRunning) {
         int xPaddleUser = paddleUser.getX()+10;
         
         // Range of constantly-changing values
         int yMinPaddleUserUpper = paddleUser.getY()-50;
         int yMinPaddleUserLower = paddleUser.getY()+50;
+        int yMinPaddleBotUpper = paddleBot.getY()-50;
+        int yMinPaddleBotLower = paddleBot.getY()+50;
         
         // Change all 10s to speed value
         int change = -10;
         while (gameRunning) {
-            if (paddleBall.getX()-28 == xPaddleUser && (paddleBall.getY() >= yMinPaddleUserUpper && paddleBall.getY() <= yMinPaddleUserLower)) {
+            if ((paddleBall.getX()-28 == xPaddleUser) && (paddleBall.getY() >= yMinPaddleUserUpper && paddleBall.getY() <= yMinPaddleUserLower)) {
                 change = 10;
+            }
+            if ((paddleBall.getX()-28 == xPaddleUser) && (paddleBall.getY() >= yMinPaddleBotUpper && paddleBall.getY() <= yMinPaddleBotLower)) {
+                change = -10;
             }
             // Make for paddleBot
             paddleBall.setLocation(paddleBall.getX(), paddleBall.getY()+change);
         }
+    }
+    
+    @Override
+    public void started() {
+        isRunning = true;
+    }
+    
+    @Override
+    public void stopped() {
+        isRunning = false;
     }
 }
