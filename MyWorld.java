@@ -34,6 +34,12 @@ public class MyWorld extends World
         bomb fbomb = new bomb();
         int x = (int)(Math.random() * 581);
         addObject(fbomb, 900, x);
+        if(fbomb.isAtEdge())
+        {
+            removeObject(fbomb);
+            int y = (int)(Math.random() * 581);
+            addObject(fbomb, 900, y);
+        }
     }
     
     /**

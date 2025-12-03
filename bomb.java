@@ -26,4 +26,5 @@ public class bomb extends Actor
         }
         setLocation(getX() + speed, getY());
     }
+     
 }
