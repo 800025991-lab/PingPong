@@ -30,6 +30,8 @@ public class MyWorld extends World
         addObject(uPad, 70, 290);
         bPad = new paddleBot();
         addObject(bPad, 810, 290);
+        s=new start();
+        addObject(s, 450,290);
     }
     
     /**
