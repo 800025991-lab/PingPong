@@ -17,6 +17,6 @@ public class start extends Actor
         // Add your action code here.
         start actor=new start();
         GreenfootImage startImage=getImage();
-        startImage.scale(300,300);
+        startImage.scale(450,300);
     }
 }

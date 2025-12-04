@@ -8,7 +8,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 public class MyWorld extends World
 {
-    // ... all your private variables (gameBall, uPad, bPad, isRunning, etc.) ...
+    // Private vars here
     private Ball gameBall;
     private paddleUser uPad;
     private paddleBot bPad;
@@ -16,6 +16,7 @@ public class MyWorld extends World
     private int xChange = -5;
     private int yChange = 0;
     private boolean isRunning = false;
+    private boolean someoneScored = false;
     
     private int playerScore = Scoreboard.playerScore; 
     private int botScore = Scoreboard.botScore; 
@@ -27,7 +28,7 @@ public class MyWorld extends World
 
         // Initial setup for the start screen
         startButton = new start();
-        addObject(startButton, 450,290);
+        addObject(startButton, 450, 290);
     }
     
     /**
@@ -59,7 +60,7 @@ public class MyWorld extends World
     }
 
     public void act() {
-        if (!isRunning && Greenfoot.isKeyDown("space")) {
+        if (!isRunning && Greenfoot.mouseClicked(startButton)) {
             startGame(); // Call the method to set up and start the game
         }
         
@@ -112,11 +113,13 @@ public class MyWorld extends World
         if (gameBall.getX() + 28 > 900) {
             playerScore++;
             showText(String.valueOf(playerScore), 300, 50);
+            someoneScored = true;
             isRunning = false;
         }
         if (gameBall.getX() - 28 < 0) { // Check both boundaries
             botScore++;
             showText(String.valueOf(botScore), 600, 50);
+            someoneScored = true;
             isRunning = false; // Game over
         }
         if (gameBall.getY() - 28 < 0) {
