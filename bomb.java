@@ -24,6 +24,9 @@ public class bomb extends Actor
             setImage(bombImage);
             imageScaled = true;
         }
-        setLocation(getX() + 5, getY());
+        setLocation(getX()-5, getY());
+        if (isTouching(paddleUser.class)) {
+            setImage("kaboom.png");
+        }
     }
 }
