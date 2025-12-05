@@ -1,77 +1,102 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
-
 /**
  * Write a description of class MyWorld here.
  * 
  * @author Shubhay Shah
  * @version 1.0.0
  */
+
 public class MyWorld extends World
 {
-    /**
-     * Constructor for objects of class MyWorld.
-     * 
-     */
+    // Private vars here
     private Ball gameBall;
     private paddleUser uPad;
     private paddleBot bPad;
-    private int change = -5;
-    private boolean isRunning = true;
-    public static int counter = 0;
+    private start startButton;
+    private bomb fbomb;
+    private int xChange = -5;
+    private int yChange = 0;
+    private boolean isRunning = false;
+    private boolean playerScored = false;
+    private boolean botScored = false;
+    
+    private int playerScore = Scoreboard.playerScore; 
+    private int botScore = Scoreboard.botScore; 
+
     public MyWorld()
     {    
-        // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(900, 580, 1);
-        prepare();
+        prepare(); // Sets up background, etc.
 
-        // Initialize and add objects
-        gameBall = new Ball();
-        addObject(gameBall, 450, 290);
-        uPad = new paddleUser();
-        addObject(uPad, 70, 290);
-        bPad = new paddleBot();
-        addObject(bPad, 810, 290);
-
-        // Randomly spawning in bombs
-        bomb fbomb = new bomb();
-        int x = (int)(Math.random() * 581);
-        addObject(fbomb, 900, x);
-        
-        paddleUser uPad = new paddleUser(); addObject(uPad, 70, 290); 
-        paddleBot bPad = new paddleBot(); addObject(bPad, 810, 290);
-        
-        int var = 0;
-        System.out.println(counter+ " "+ var);
-        if (counter>var) { // Check both boundaries
-            bomb nbomb = new bomb();
-            int y = (int)(Math.random() * 581);
-            addObject(nbomb, 900, y);
-            var = counter;
-        }
+        // Initial setup for the start screen
+        startButton = new start();
+        addObject(startButton, 450, 290);
     }
     
     /**
      * Prepare the world for the start of the program.
-     * That is: create the initial objects and add them to the world.
      */
     private void prepare()
     {
         GreenfootImage background = getBackground();
         background.setColor(Color.BLACK);
         background.fill();
-        started();
     }
     
-    public void act() {
-        if (!isRunning) {
-            return; // Stop game logic if the game is over
-        }
+    private void startGame() {
+        isRunning = true;
+        removeObject(startButton); // Remove the start button/text
 
+        // Initialize and add objects (moved from the constructor)
+        gameBall = new Ball();
+        addObject(gameBall, 450, 290);
+        uPad = new paddleUser();
+        addObject(uPad, 70, 290);
+        bPad = new paddleBot();
+        addObject(bPad, 810, 290);
+        spawnBombs();
+    }
+    
+    private void spawnBombs() {
+        // Randomly spawning in bombs
+        fbomb = new bomb();
+        int x = (int)(Math.random() * 581);
+        addObject(fbomb, 850, x);
+    }
+    
+    private void resetGame() {
+        gameBall.setLocation(450, 290);
+        uPad.setLocation(70, 290);
+        bPad.setLocation(810, 290);
+        
+        isRunning = true;
+    }
+
+    public void act() {
+        if (!isRunning && Greenfoot.mouseClicked(startButton)) {
+            startGame(); // Call the method to set up and start the game
+        }
+        if (playerScored || botScored) {
+            resetGame(); // Resets game when someone scores
+        }
+        if (!isRunning) {
+            return; // Exit act() immediately if game isn't running
+        } 
+        if (fbomb.getX() + 28 > 900) {
+            removeObject(fbomb);
+            spawnBombs();
+        }
+        if (fbomb.getX() - 28 < 0) { // Check both boundaries
+            removeObject(fbomb);
+            spawnBombs();
+        }
+        // Converting scores to strings and displaying
         // Converting scores to strings and displaying (can be updated here if scores change)
         String playerScoreString = String.valueOf(Scoreboard.playerScore);
         String botScoreString = String.valueOf(Scoreboard.botScore);
         showText(playerScoreString, 300, 50);
         showText(botScoreString, 600, 50);
+        showText("LEVEL: "+String.valueOf(Scoreboard.level()),450,50);
 
         // Range of constantly-changing values (get current locations in each act cycle)
         int xPaddleUser = uPad.getX() + 10; 
@@ -85,37 +110,60 @@ public class MyWorld extends World
         // Check collision with User Paddle (left side)
         // Both X position MUST match AND Y position MUST be in range
         if ((gameBall.getX() - 28 <= xPaddleUser) && (gameBall.getY() >= yMinPaddleUserUpper && gameBall.getY() <= yMinPaddleUserLower)) {
-            change = 5; // Change direction to move right
+            xChange = 5; // Change direction to move right
+            if (Greenfoot.isKeyDown("down")) {
+                yChange = -2;
+            }
+            if (Greenfoot.isKeyDown("up")) {
+                yChange = 2;
+            }
         }
     
         // Check collision with Bot Paddle (right side)
         // Both X position MUST match AND Y position MUST be in range
         if ((gameBall.getX() + 28 >= xPaddleBot) && (gameBall.getY() >= yMinPaddleBotUpper && gameBall.getY() <= yMinPaddleBotLower)) {
-            change = -5; // Change direction to move left
+            xChange = -5; // Change direction to move left
+            if (Greenfoot.isKeyDown("down")) {
+                yChange = -2;
+            }
+            if (Greenfoot.isKeyDown("up")) {
+                yChange = 2;
+            }
         }
         
         // Check if the ball goes off the side walls
         if (gameBall.getX() + 28 > 900) {
-            (Scoreboard.botScore)++;
+            playerScore++;
+            showText(String.valueOf(playerScore), 300, 50);
+            playerScored = true;
             isRunning = false;
         }
         if (gameBall.getX() - 28 < 0) { // Check both boundaries
-            (Scoreboard.playerScore)++;
+            botScore++;
+            showText(String.valueOf(botScore), 600, 50);
+            botScored = true;
             isRunning = false; // Game over
+        }
+        if (gameBall.getY() - 28 < 0) {
+            yChange = 2;
+        }
+        if (gameBall.getY() + 28 > 600) {
+            yChange = -2;
         }
     
         // Move the ball horizontally
-        gameBall.setLocation(gameBall.getX() + change, gameBall.getY());
+        gameBall.setLocation(gameBall.getX() + xChange, gameBall.getY() + yChange);
     }
     
-    @Override
-    public void started() {
-        isRunning = true;
-    }
+    // Remove or comment out the default started/stopped overrides which interfere with manual control
+    // @Override
+    // public void started() {
+    //     isRunning = true; 
+    // }
     
-    @Override
-    public void stopped() {
-        isRunning = false;
-    }
+    // @Override
+    // public void stopped() {
+    //     isRunning = false;
+    // }
     
 }
