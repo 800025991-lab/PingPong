@@ -24,6 +24,6 @@ public class bomb extends Actor
             setImage(bombImage);
             imageScaled = true;
         }
-        setLocation(getX() + speed, getY());
+        setLocation(getX() + 5, getY());
     }
 }

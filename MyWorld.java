@@ -13,10 +13,12 @@ public class MyWorld extends World
     private paddleUser uPad;
     private paddleBot bPad;
     private start startButton;
+    private bomb fbomb;
     private int xChange = -5;
     private int yChange = 0;
     private boolean isRunning = false;
-    private boolean someoneScored = false;
+    private boolean playerScored = false;
+    private boolean botScored = false;
     
     private int playerScore = Scoreboard.playerScore; 
     private int botScore = Scoreboard.botScore; 
@@ -52,22 +54,42 @@ public class MyWorld extends World
         addObject(uPad, 70, 290);
         bPad = new paddleBot();
         addObject(bPad, 810, 290);
-
+        spawnBombs();
+    }
+    
+    private void spawnBombs() {
         // Randomly spawning in bombs
-        bomb fbomb = new bomb();
+        fbomb = new bomb();
         int x = (int)(Math.random() * 581);
-        addObject(fbomb, 900, x);
+        addObject(fbomb, 850, x);
+    }
+    
+    private void resetGame() {
+        gameBall.setLocation(450, 290);
+        uPad.setLocation(70, 290);
+        bPad.setLocation(810, 290);
+        
+        isRunning = true;
     }
 
     public void act() {
         if (!isRunning && Greenfoot.mouseClicked(startButton)) {
             startGame(); // Call the method to set up and start the game
         }
-        
+        if (playerScored || botScored) {
+            resetGame(); // Resets game when someone scores
+        }
         if (!isRunning) {
             return; // Exit act() immediately if game isn't running
         } 
-
+        if (fbomb.getX() + 28 > 900) {
+            removeObject(fbomb);
+            spawnBombs();
+        }
+        if (fbomb.getX() - 28 < 0) { // Check both boundaries
+            removeObject(fbomb);
+            spawnBombs();
+        }
         // Converting scores to strings and displaying
         // Converting scores to strings and displaying (can be updated here if scores change)
         String playerScoreString = String.valueOf(Scoreboard.playerScore);
@@ -113,13 +135,13 @@ public class MyWorld extends World
         if (gameBall.getX() + 28 > 900) {
             playerScore++;
             showText(String.valueOf(playerScore), 300, 50);
-            someoneScored = true;
+            playerScored = true;
             isRunning = false;
         }
         if (gameBall.getX() - 28 < 0) { // Check both boundaries
             botScore++;
             showText(String.valueOf(botScore), 600, 50);
-            someoneScored = true;
+            botScored = true;
             isRunning = false; // Game over
         }
         if (gameBall.getY() - 28 < 0) {
