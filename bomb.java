@@ -14,7 +14,6 @@ public class bomb extends Actor
      */
     private int speed = -5; 
     private boolean imageScaled = false;
-
     public void act()
     {
         if (!imageScaled)
@@ -25,6 +24,12 @@ public class bomb extends Actor
             imageScaled = true;
         }
         setLocation(getX() + speed, getY());
+        if (getX() == 0) // Or getX() <= 0 or isAtEdge() depending on your needs
+        {
+            // Remove *this* specific instance from the world
+            getWorld().removeObject(this); 
+            MyWorld.counter++;
+        }
     }
      
 }

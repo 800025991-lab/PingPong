@@ -17,6 +17,7 @@ public class MyWorld extends World
     private paddleBot bPad;
     private int change = -5;
     private boolean isRunning = true;
+    public static int counter = 0;
     public MyWorld()
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
@@ -38,6 +39,15 @@ public class MyWorld extends World
         
         paddleUser uPad = new paddleUser(); addObject(uPad, 70, 290); 
         paddleBot bPad = new paddleBot(); addObject(bPad, 810, 290);
+        
+        int var = 0;
+        System.out.println(counter+ " "+ var);
+        if (counter>var) { // Check both boundaries
+            bomb nbomb = new bomb();
+            int y = (int)(Math.random() * 581);
+            addObject(nbomb, 900, y);
+            var = counter;
+        }
     }
     
     /**
